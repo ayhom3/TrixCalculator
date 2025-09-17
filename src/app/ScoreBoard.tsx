@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
 import ScoringInputs from "./ScoringInputs";
+import React from "react";
 
 interface ScoreBoardProps {
     teamName1: string;
@@ -34,6 +35,9 @@ export default function ScoreBoard({ teamName1, teamName2, onReset }: ScoreBoard
     const [gameHistory, setGameHistory] = useState<GameHistory[]>([]);
     const [kingdomHistory, setKingdomHistory] = useState<KingdomHistory[]>([]);
     const [expandedKingdom, setExpandedKingdom] = useState<number | null>(null);
+
+    const MAX_KINGDOMS = 4;
+    const TOTAL_ROUNDS_PER_KINGDOM = 5;
 
     const allGames = [
         { id: "king", label: "King" },
@@ -78,6 +82,7 @@ export default function ScoreBoard({ teamName1, teamName2, onReset }: ScoreBoard
     };
 
     const startNewKingdom = () => {
+        if (currentKingdomId >= MAX_KINGDOMS) return;
         setKingdomHistory(prev => [...prev, {
             id: currentKingdomId,
             modes: Array.from(completedModes),
@@ -105,7 +110,7 @@ export default function ScoreBoard({ teamName1, teamName2, onReset }: ScoreBoard
             setCurrentKingdomId(1);
             setGameHistory([]);
             setExpandedKingdom(null);
-            onReset(); // Call parent reset handler
+            onReset();
         }
     };
 
@@ -115,30 +120,27 @@ export default function ScoreBoard({ teamName1, teamName2, onReset }: ScoreBoard
 
     const availableGames = allGames.filter(game => !completedModes.has(game.id));
     const currentRound = completedModes.size + (currentMode ? 1 : 0);
-    const totalRounds = 5;
-    const isKingdomComplete = completedModes.size >= totalRounds;
+    const isKingdomComplete = completedModes.size >= TOTAL_ROUNDS_PER_KINGDOM;
+    const isGameComplete = currentKingdomId >= MAX_KINGDOMS && isKingdomComplete;
 
     return (
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto p-8">
             {/* Left Side: Main Content */}
-            <div className="flex-1 space-y-6 bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-center text-gray-800">Kingdom {currentKingdomId} Scoreboard</h2>
-                <div className="bg-gray-100 p-4 rounded-lg">
+            <div className="flex-1 space-y-8 bg-white p-8 rounded-lg border border-gray-200 shadow-sm">
+                <h2 className="text-2xl font-bold text-center text-gray-700">Kingdom {currentKingdomId} Scoreboard</h2>
+                <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
                     <div className="flex justify-between items-center mb-4">
-                        <span className="font-semibold text-gray-700">{teamName1}</span>
-                        <span className="text-3xl font-bold text-blue-600">{currentKingdomScore1}</span>
+                        <span className="text-base font-semibold text-gray-700">{teamName1}</span>
+                        <span className="text-3xl font-bold text-gray-700">{currentKingdomScore1}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="font-semibold text-gray-700">{teamName2}</span>
-                        <span className="text-3xl font-bold text-blue-600">{currentKingdomScore2}</span>
+                        <span className="text-base font-semibold text-gray-700">{teamName2}</span>
+                        <span className="text-3xl font-bold text-gray-700">{currentKingdomScore2}</span>
                     </div>
-                    <p className="text-sm text-center text-gray-600 mt-4">
-                        Overall: {teamName1} - {overallScore1} | {teamName2} - {overallScore2}
-                    </p>
                 </div>
 
-                <div className="text-center text-sm text-gray-600">
-                    Kingdom {currentKingdomId} - Round {currentRound} of {totalRounds}
+                <div className="text-center text-sm font-medium text-gray-500">
+                    Kingdom {currentKingdomId} | Round {currentRound} of {TOTAL_ROUNDS_PER_KINGDOM} | Overall: {teamName1} {overallScore1}, {teamName2} {overallScore2}
                 </div>
 
                 {currentMode ? (
@@ -150,25 +152,32 @@ export default function ScoreBoard({ teamName1, teamName2, onReset }: ScoreBoard
                         teamName2={teamName2}
                     />
                 ) : isKingdomComplete ? (
-                    <div className="text-center space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-700">Kingdom {currentKingdomId} Complete!</h3>
-                        <p className="text-sm text-gray-600">Start next kingdom?</p>
-                        <button
-                            onClick={startNewKingdom}
-                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
-                        >
-                            Start Kingdom {currentKingdomId + 1}
-                        </button>
+                    <div className="text-center space-y-6">
+                        <h3 className="text-xl font-bold text-gray-700">Kingdom {currentKingdomId} Complete!</h3>
+                        {isGameComplete ? (
+                            <p className="text-base font-medium text-gray-500">Game Over! All 4 kingdoms completed.</p>
+                        ) : (
+                            <>
+                                <p className="text-base font-medium text-gray-500">Start next kingdom?</p>
+                                <button
+                                    onClick={startNewKingdom}
+                                    disabled={currentKingdomId >= MAX_KINGDOMS}
+                                    className="w-full px-6 py-3 bg-white border-2 border-gray-200 text-base font-semibold text-gray-700 rounded-lg hover:bg-gray-50 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+                                >
+                                    Start Kingdom {currentKingdomId + 1}
+                                </button>
+                            </>
+                        )}
                     </div>
                 ) : (
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-700">Pick Next Game Mode</h3>
-                        <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-6">
+                        <h3 className="text-xl font-bold text-gray-700">Pick Next Game Mode</h3>
+                        <div className="grid grid-cols-2 gap-4">
                             {availableGames.map((game) => (
                                 <button
                                     key={game.id}
                                     onClick={() => setCurrentMode(game.id)}
-                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-200"
+                                    className="min-h-[60px] flex justify-center items-center px-6 py-3 bg-white border-2 border-gray-200 text-base font-semibold text-gray-700 rounded-lg hover:bg-gray-50 hover:shadow-sm transition duration-200"
                                 >
                                     {game.label}
                                 </button>
@@ -177,17 +186,17 @@ export default function ScoreBoard({ teamName1, teamName2, onReset }: ScoreBoard
                     </div>
                 )}
 
-                <div className="flex gap-3">
+                <div className="flex gap-4">
                     <button
                         onClick={resetGame}
-                        className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200"
+                        className="flex-1 min-h-[60px] flex justify-center items-center px-6 py-3 bg-white border-2 border-gray-200 text-base font-semibold text-gray-700 rounded-lg hover:bg-gray-50 hover:shadow-sm transition duration-200"
                     >
                         Reset Game
                     </button>
                     <button
                         onClick={undoLastScore}
                         disabled={gameHistory.length === 0}
-                        className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 transition duration-200"
+                        className="flex-1 min-h-[60px] flex justify-center items-center px-6 py-3 bg-white border-2 border-gray-200 text-base font-semibold text-gray-700 rounded-lg hover:bg-gray-50 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
                     >
                         Undo Last Score
                     </button>
@@ -195,83 +204,82 @@ export default function ScoreBoard({ teamName1, teamName2, onReset }: ScoreBoard
             </div>
 
             {/* Right Side: Game History */}
-            <div className="flex-1 space-y-6">
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-semibold text-gray-700 mb-4">Current Kingdom Game History</h3>
+            <div className="flex-1 space-y-8">
+                <div className="bg-white p-8 rounded-lg border border-gray-200 shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-700 mb-4">Current Kingdom Game History</h3>
                     {gameHistory.length > 0 ? (
-                        <div className="border rounded-lg overflow-hidden">
+                        <div className="border border-gray-200 rounded-lg overflow-hidden">
                             <table className="w-full">
                                 <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="px-4 py-2 text-left text-gray-600">Game</th>
-                                    <th className="px-4 py-2 text-right text-gray-600">{teamName1}</th>
-                                    <th className="px-4 py-2 text-right text-gray-600">{teamName2}</th>
+                                <tr className="bg-gray-50">
+                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Game</th>
+                                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">{teamName1}</th>
+                                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">{teamName2}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {gameHistory.map((game, index) => (
-                                    <tr key={index} className="border-t hover:bg-gray-50">
-                                        <td className="px-4 py-2 text-gray-700">{game.label}</td>
-                                        <td className="px-4 py-2 text-right font-semibold text-gray-800">{game.pointsTeam1}</td>
-                                        <td className="px-4 py-2 text-right font-semibold text-gray-800">{game.pointsTeam2}</td>
+                                    <tr key={`${game.id}-${index}`} className="border-t border-gray-200 hover:bg-gray-50">
+                                        <td className="px-6 py-3 text-gray-700 text-sm font-medium">{game.label}</td>
+                                        <td className="px-6 py-3 text-right font-semibold text-gray-700 text-sm">{game.pointsTeam1}</td>
+                                        <td className="px-6 py-3 text-right font-semibold text-gray-700 text-sm">{game.pointsTeam2}</td>
                                     </tr>
                                 ))}
                                 </tbody>
                             </table>
                         </div>
                     ) : (
-                        <p className="text-sm text-gray-600">No games played in this kingdom yet.</p>
+                        <p className="text-sm font-medium text-gray-500">No games played in this kingdom yet.</p>
                     )}
                 </div>
 
                 {kingdomHistory.length > 0 && (
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                        <h3 className="text-lg font-semibold text-gray-700 mb-4">Previous Kingdoms Summary</h3>
-                        <div className="border rounded-lg overflow-hidden">
+                    <div className="bg-white p-8 rounded-lg border border-gray-200 shadow-sm">
+                        <h3 className="text-xl font-bold text-gray-700 mb-4">Previous Kingdoms Summary</h3>
+                        <div className="border border-gray-200 rounded-lg overflow-hidden">
                             <table className="w-full">
                                 <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="px-4 py-2 text-left text-gray-600">Kingdom</th>
-                                    <th className="px-4 py-2 text-left text-gray-600">Modes</th>
-                                    <th className="px-4 py-2 text-right text-gray-600">{teamName1}</th>
-                                    <th className="px-4 py-2 text-right text-gray-600">{teamName2}</th>
+                                <tr className="bg-gray-50">
+                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Kingdom</th>
+                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Modes</th>
+                                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">{teamName1}</th>
+                                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">{teamName2}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {kingdomHistory.map((kingdom) => (
-                                    <>
+                                    <React.Fragment key={`kingdom-${kingdom.id}`}>
                                         <tr
-                                            key={kingdom.id}
-                                            className="border-t cursor-pointer hover:bg-gray-50"
+                                            className="border-t border-gray-200 cursor-pointer hover:bg-gray-50"
                                             onClick={() => toggleKingdomDetails(kingdom.id)}
                                         >
-                                            <td className="px-4 py-2 font-medium text-gray-700">
+                                            <td className="px-6 py-3 font-semibold text-gray-700 text-sm">
                                                 #{kingdom.id} {expandedKingdom === kingdom.id ? '▼' : '▶'}
                                             </td>
-                                            <td className="px-4 py-2 text-gray-700">
+                                            <td className="px-6 py-3 text-gray-700 text-sm font-medium">
                                                 {kingdom.modes.map(m => allGames.find(g => g.id === m)?.label).join(', ')}
                                             </td>
-                                            <td className="px-4 py-2 text-right font-semibold text-gray-800">{kingdom.pointsTeam1}</td>
-                                            <td className="px-4 py-2 text-right font-semibold text-gray-800">{kingdom.pointsTeam2}</td>
+                                            <td className="px-6 py-3 text-right font-semibold text-gray-700 text-sm">{kingdom.pointsTeam1}</td>
+                                            <td className="px-6 py-3 text-right font-semibold text-gray-700 text-sm">{kingdom.pointsTeam2}</td>
                                         </tr>
                                         {expandedKingdom === kingdom.id && kingdom.games.length > 0 && (
-                                            <tr>
-                                                <td colSpan={4} className="px-4 py-2 bg-gray-50">
-                                                    <div className="border rounded-lg overflow-hidden">
+                                            <tr key={`kingdom-games-${kingdom.id}`}>
+                                                <td colSpan={4} className="px-6 py-3 bg-gray-50">
+                                                    <div className="border border-gray-200 rounded-lg overflow-hidden">
                                                         <table className="w-full">
                                                             <thead>
-                                                            <tr className="bg-gray-100">
-                                                                <th className="px-4 py-2 text-left text-gray-600">Game</th>
-                                                                <th className="px-4 py-2 text-right text-gray-600">{teamName1}</th>
-                                                                <th className="px-4 py-2 text-right text-gray-600">{teamName2}</th>
+                                                            <tr className="bg-gray-50">
+                                                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Game</th>
+                                                                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">{teamName1}</th>
+                                                                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">{teamName2}</th>
                                                             </tr>
                                                             </thead>
                                                             <tbody>
                                                             {kingdom.games.map((game, index) => (
-                                                                <tr key={index} className="border-t hover:bg-gray-50">
-                                                                    <td className="px-4 py-2 text-gray-700">{game.label}</td>
-                                                                    <td className="px-4 py-2 text-right font-semibold text-gray-800">{game.pointsTeam1}</td>
-                                                                    <td className="px-4 py-2 text-right font-semibold text-gray-800">{game.pointsTeam2}</td>
+                                                                <tr key={`game-${kingdom.id}-${game.id}-${index}`} className="border-t border-gray-200 hover:bg-gray-50">
+                                                                    <td className="px-6 py-3 text-gray-700 text-sm font-medium">{game.label}</td>
+                                                                    <td className="px-6 py-3 text-right font-semibold text-gray-700 text-sm">{game.pointsTeam1}</td>
+                                                                    <td className="px-6 py-3 text-right font-semibold text-gray-700 text-sm">{game.pointsTeam2}</td>
                                                                 </tr>
                                                             ))}
                                                             </tbody>
@@ -280,7 +288,7 @@ export default function ScoreBoard({ teamName1, teamName2, onReset }: ScoreBoard
                                                 </td>
                                             </tr>
                                         )}
-                                    </>
+                                    </React.Fragment>
                                 ))}
                                 </tbody>
                             </table>

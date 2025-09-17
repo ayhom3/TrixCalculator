@@ -15,35 +15,35 @@ export default function Teams() {
     };
 
     return (
-        <div className="container mx-auto p-6 max-w-5xl bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Trix Scoreboard</h1>
-            <div className="space-y-6">
+        <div className="max-w-7xl mx-auto p-8">
+            <h1 className="text-2xl font-bold text-center text-gray-700 mb-8">Trix Scoreboard</h1>
+            <div className="space-y-8">
                 {!gameStarted && (
-                    <div className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
-                        <h2 className="text-xl font-semibold text-gray-700 mb-4 text-center">Enter Team Names</h2>
-                        <div className="space-y-4">
+                    <div className="bg-white p-8 rounded-lg border border-gray-200 shadow-sm max-w-md mx-auto">
+                        <h2 className="text-xl font-bold text-gray-700 mb-6 text-center">Enter Team Names</h2>
+                        <div className="space-y-6">
                             <label className="block">
-                                <span className="block text-sm font-medium text-gray-600 mb-1">Team 1</span>
+                                <span className="block text-base font-semibold text-gray-700 mb-2">Team 1</span>
                                 <input
                                     value={teamName1}
                                     onChange={(e) => setTeamName1(e.target.value)}
-                                    className="border border-gray-300 p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-4 py-3 text-base font-medium text-gray-700 border-2 border-gray-200 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
                                     placeholder="Enter Team 1 name"
                                 />
                             </label>
                             <label className="block">
-                                <span className="block text-sm font-medium text-gray-600 mb-1">Team 2</span>
+                                <span className="block text-base font-semibold text-gray-700 mb-2">Team 2</span>
                                 <input
                                     value={teamName2}
                                     onChange={(e) => setTeamName2(e.target.value)}
-                                    className="border border-gray-300 p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-4 py-3 text-base font-medium text-gray-700 border-2 border-gray-200 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
                                     placeholder="Enter Team 2 name"
                                 />
                             </label>
                             <button
                                 onClick={() => setGameStarted(true)}
                                 disabled={!teamName1 || !teamName2}
-                                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition duration-200"
+                                className="w-full px-6 py-3 bg-white border-2 border-gray-200 text-base font-semibold text-gray-700 rounded-lg hover:bg-gray-50 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
                             >
                                 Start Game
                             </button>
