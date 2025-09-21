@@ -55,27 +55,27 @@ export default function ScoringInputs({ gameMode, onScoreUpdate, onModeComplete,
         switch (gameMode) {
             case "king":
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                         <div>
-                            <label className="block text-base font-semibold text-gray-700 mb-3">Which team collected the King?</label>
-                            <div className="grid grid-cols-2 gap-4">
+                            <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">Which team collected the King?</label>
+                            <div className="grid grid-cols-2 gap-2 sm:gap-4">
                                 <button
                                     onClick={() => handleNumericSelection(teamName1, gameMode, 1)}
                                     disabled={!!selectedValue}
-                                    className={`min-w-[60px] min-h-[60px] flex justify-center items-center px-8 py-6 rounded-lg border-2 border-gray-200 text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
+                                    className={`min-w-[60px] min-h-[48px] sm:min-h-[60px] flex justify-center items-center px-4 sm:px-8 py-2 sm:py-6 rounded-lg border-2 border-gray-200 text-sm sm:text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
                                         selectedValue === teamName1 ? 'bg-blue-700 text-white border-blue-600' : ''
                                     }`}
                                 >
-                                    {teamName1} (-75)
+                                    {teamName1}
                                 </button>
                                 <button
                                     onClick={() => handleNumericSelection(teamName2, gameMode, 2)}
                                     disabled={!!selectedValue}
-                                    className={`min-w-[60px] min-h-[60px] flex justify-center items-center px-8 py-6 rounded-lg border-2 border-gray-200 text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
+                                    className={`min-w-[60px] min-h-[48px] sm:min-h-[60px] flex justify-center items-center px-4 sm:px-8 py-2 sm:py-6 rounded-lg border-2 border-gray-200 text-sm sm:text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
                                         selectedValue === teamName2 ? 'bg-blue-700 text-white border-blue-600' : ''
                                     }`}
                                 >
-                                    {teamName2} (-75)
+                                    {teamName2}
                                 </button>
                             </div>
                         </div>
@@ -83,66 +83,64 @@ export default function ScoringInputs({ gameMode, onScoreUpdate, onModeComplete,
                 );
             case "queen":
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                         <div>
-                            <label className="block text-base font-semibold text-gray-700 mb-3">{teamName1} Queens Collected:</label>
-                            <div className="grid grid-cols-5 gap-4">
+                            <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">{teamName1} Queens Collected:</label>
+                            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4">
                                 {[0, 1, 2, 3, 4].map(num => (
                                     <button
                                         key={num}
                                         onClick={() => handleNumericSelection(num, gameMode)}
                                         disabled={!!selectedValue}
-                                        className={`min-w-[60px] min-h-[60px] flex justify-center items-center px-8 py-6 rounded-lg border-2 border-gray-200 text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
+                                        className={`min-w-[60px] min-h-[48px] sm:min-h-[60px] flex justify-center items-center px-4 sm:px-8 py-2 sm:py-6 rounded-lg border-2 border-gray-200 text-sm sm:text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
                                             selectedValue === String(num) ? 'bg-blue-700 text-white border-blue-600' : ''
                                         }`}
                                     >
-                                        {num} ({num * -25})
+                                        {num}
                                     </button>
                                 ))}
                             </div>
                         </div>
-
                     </div>
                 );
             case "diamonds":
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                         <div>
-                            <label className="block text-base font-semibold text-gray-700 mb-3">{teamName1} Diamond Cards collected:</label>
-                            <div className="grid grid-cols-4 gap-4">
+                            <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">{teamName1} Diamond Cards collected:</label>
+                            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4">
                                 {Array.from({ length: 14 }, (_, i) => i).map(num => (
                                     <button
                                         key={num}
                                         onClick={() => handleNumericSelection(num, gameMode)}
                                         disabled={!!selectedValue}
-                                        className={`min-w-[60px] min-h-[60px] flex justify-center items-center px-8 py-6 rounded-lg border-2 border-gray-200 text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
+                                        className={`min-w-[60px] min-h-[48px] sm:min-h-[60px] flex justify-center items-center px-4 sm:px-8 py-2 sm:py-6 rounded-lg border-2 border-gray-200 text-sm sm:text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
                                             selectedValue === String(num) ? 'bg-blue-700 text-white border-blue-600' : ''
                                         }`}
                                     >
-                                        {num} ({num * -10})
+                                        {num}
                                     </button>
                                 ))}
                             </div>
                         </div>
-
                     </div>
                 );
             case "ltoosh":
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                         <div>
-                            <label className="block text-base font-semibold text-gray-700 mb-3">{teamName1} Tricks Collected:</label>
-                            <div className="grid grid-cols-4 gap-4">
+                            <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">{teamName1} Tricks Collected:</label>
+                            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4">
                                 {Array.from({ length: 14 }, (_, i) => i).map(num => (
                                     <button
                                         key={num}
                                         onClick={() => handleNumericSelection(num, gameMode)}
                                         disabled={!!selectedValue}
-                                        className={`min-w-[60px] min-h-[60px] flex justify-center items-center px-8 py-6 rounded-lg border-2 border-gray-200 text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
+                                        className={`min-w-[60px] min-h-[48px] sm:min-h-[60px] flex justify-center items-center px-4 sm:px-8 py-2 sm:py-6 rounded-lg border-2 border-gray-200 text-sm sm:text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
                                             selectedValue === String(num) ? 'bg-blue-700 text-white border-blue-600' : ''
                                         }`}
                                     >
-                                        {num} ({num * -15})
+                                        {num}
                                     </button>
                                 ))}
                             </div>
@@ -157,25 +155,24 @@ export default function ScoringInputs({ gameMode, onScoreUpdate, onModeComplete,
                     { positions: "3,4", team1Points: 150, team2Points: 350 },
                 ];
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                         <div>
-                            <label className="block text-base font-semibold text-gray-700 mb-3">{teamName1} Finish Positions (1= First, 4= Last):</label>
-                            <div className="grid grid-cols-2 gap-4">
+                            <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3">{teamName1} Finish Positions (1= First, 4= Last):</label>
+                            <div className="grid grid-cols-2 gap-2 sm:gap-4">
                                 {trixOptions.map(option => (
                                     <button
                                         key={option.positions}
                                         onClick={() => handleNumericSelection(option.positions, gameMode)}
                                         disabled={!!selectedValue}
-                                        className={`min-w-[60px] min-h-[60px] flex justify-center items-center px-8 py-6 rounded-lg border-2 border-gray-200 text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
+                                        className={`min-w-[60px] min-h-[48px] sm:min-h-[60px] flex justify-center items-center px-4 sm:px-8 py-2 sm:py-6 rounded-lg border-2 border-gray-200 text-sm sm:text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:bg-blue-700 focus:text-white focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ${
                                             selectedValue === option.positions ? 'bg-blue-700 text-white border-blue-600' : ''
                                         }`}
                                     >
-                                        ({option.positions}) ({option.team1Points})
+                                        {option.positions}
                                     </button>
                                 ))}
                             </div>
                         </div>
-
                     </div>
                 );
             default:
@@ -184,8 +181,8 @@ export default function ScoringInputs({ gameMode, onScoreUpdate, onModeComplete,
     };
 
     return (
-        <div className="space-y-6 bg-white p-8 rounded-lg border border-gray-200 shadow-sm">
-            <h3 className="text-xl font-bold text-gray-700">Scoring for {gameMode.toUpperCase()} Game</h3>
+        <div className="space-y-4 sm:space-y-6 bg-white p-4 sm:p-6 md:p-8 rounded-lg border border-gray-200 shadow-sm">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-700">Scoring for {gameMode.toUpperCase()} Game</h3>
             {getInputs()}
         </div>
     );
