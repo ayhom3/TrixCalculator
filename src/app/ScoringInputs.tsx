@@ -39,7 +39,9 @@ export default function ScoringInputs({ gameMode, onScoreUpdate, onModeComplete,
                 const trixPoints = {
                     "1,2": { team1: 350, team2: 150 },
                     "1,3": { team1: 300, team2: 200 },
+                    "1,4": { team1: 250, team2: 250 },
                     "2,3": { team1: 250, team2: 250 },
+                    "2,4": { team1: 200, team2: 300 },
                     "3,4": { team1: 150, team2: 350 },
                 };
                 pointsTeam1 = trixPoints[value as keyof typeof trixPoints].team1;
@@ -151,7 +153,9 @@ export default function ScoringInputs({ gameMode, onScoreUpdate, onModeComplete,
                 const trixOptions = [
                     { positions: "1,2", team1Points: 350, team2Points: 150 },
                     { positions: "1,3", team1Points: 300, team2Points: 200 },
+                    { positions: "1,4", team1Points: 250, team2Points: 250 },
                     { positions: "2,3", team1Points: 250, team2Points: 250 },
+                    { positions: "2,4", team1Points: 200, team2Points: 300 },
                     { positions: "3,4", team1Points: 150, team2Points: 350 },
                 ];
                 return (
